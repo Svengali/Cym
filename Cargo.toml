@@ -1,8 +1,21 @@
+
+
+
 [package]
-name = "Cym"
+name = "cym"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+bevy =        { path = "libs/bevy" }
+bevy_sprite = { path = "libs/bevy/crates/bevy_sprite" }
+bevy_egui =   { path = "libs/bevy_egui" }
+crdts =       { path = "libs/rust-crdt" }
+
+json = "0.12.4"
+rand = "0.8.5"
+
+
+

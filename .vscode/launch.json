@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/target/debug/village.exe",
+            "program": "${workspaceFolder}/target/debug/Cym.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/run",

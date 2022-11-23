@@ -84,7 +84,7 @@ impl Map {
 
             //*
             commands
-                .spawn_bundle(SpriteSheetBundle {
+                .spawn(SpriteSheetBundle {
                     sprite: sprite,
                     texture_atlas: texture_atlas_handle.clone(),
                     transform: pos,

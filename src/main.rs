@@ -49,7 +49,7 @@ fn main() {
 
     //app.insert_resource(ImageSettings::default_nearest()); // prevents blurry sprites
     app.add_plugins(DefaultPlugins);
-    //app.add_plugin(EguiPlugin);
+    app.add_plugin(EguiPlugin);
     app.add_system(keyboard_input_system);
     app.add_startup_system(setup);
     //app.add_system(animate_sprite);
@@ -58,6 +58,8 @@ fn main() {
     app.add_system(mouse_move_event);
     app.add_system(scroll_events);
     //app.add_system(my_cursor_system);
+
+    app.add_system(ui);
 
     app.add_system(bevy::window::close_on_esc);
 
@@ -99,9 +101,17 @@ fn draw_tilemap(
     //*/
 ) {
 
-
-
 }
+
+
+fn ui(
+    mut context: ResMut<EguiContext>,
+) {
+    egui::Window::new("Hello").show(context.ctx_mut(), |ui| {
+        ui.label("world");
+    });
+}
+
 
 
 #[derive(Component)]

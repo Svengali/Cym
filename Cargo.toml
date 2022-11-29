@@ -16,4 +16,4 @@ crdts =       { path = "libs/rust-crdt" }
 
 json = "0.12.4"
 rand = "0.8.5"
-
+thread_local = "1.1"

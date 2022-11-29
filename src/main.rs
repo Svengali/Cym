@@ -3,8 +3,10 @@
 //! into a texture atlas, and changing the displayed image periodically.
 
 use bevy::input::mouse::{MouseButtonInput, MouseWheel, MouseScrollUnit, MouseMotion};
+use bevy::render::{RenderStage, RenderApp};
 //use bevy::log::LogSettings;
 use bevy::render::camera::RenderTarget;
+use bevy::tasks::{ComputeTaskPool, TaskPool};
 use bevy::{
     prelude::*, 
     //render::texture::ImageSettings,
@@ -15,9 +17,10 @@ use bevy_egui::egui::Align2;
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 
 
-
+mod fixed;
 
 mod tile;
+use bevy_sprite::SpriteSystem;
 use tile::tile::TileBundle;
 use tile::map::Map;
 
@@ -47,6 +50,9 @@ fn main() {
         ..Default::default()
     };
 
+    //ComputeTaskPool::init(TaskPool::default);
+
+
     //app.insert_resource(ImageSettings::default_nearest()); // prevents blurry sprites
     app.add_plugins(DefaultPlugins);
     app.add_plugin(EguiPlugin);
@@ -57,11 +63,29 @@ fn main() {
     app.add_system(mouse_button_events);
     app.add_system(mouse_move_event);
     app.add_system(scroll_events);
+    app.add_system(once_visibility_propagate);
+    app.add_system(test_transform);
     //app.add_system(my_cursor_system);
 
     app.add_system(ui);
 
     app.add_system(bevy::window::close_on_esc);
+
+
+
+    if let Ok(render_app) = app.get_sub_app_mut(RenderApp) {
+        render_app
+        .add_system_to_stage(
+        RenderStage::Extract,
+        fixed::extract_sprites.label(SpriteSystem::ExtractSprites));
+    };
+
+
+
+
+
+
+
 
     app.run();
 }
@@ -103,6 +127,36 @@ fn draw_tilemap(
 
 }
 
+static mut s_has_done_visiblity: bool = false;
+
+fn once_visibility_propagate(
+    mut root_query: Query<
+        (
+            Option<&Children>,
+            &Visibility,
+            &mut ComputedVisibility,
+            Entity,
+        ),
+        Without<Parent>,
+    >,
+    mut visibility_query: Query<(&Visibility, &mut ComputedVisibility, &Parent)>,
+    children_query: Query<&Children, (With<Parent>, With<Visibility>, With<ComputedVisibility>)>,
+) {
+
+    unsafe {
+        if s_has_done_visiblity { return };
+    }
+
+    for (children, visibility, mut computed_visibility, entity) in root_query.iter_mut() {
+        // reset "view" visibility here ... if this entity should be drawn a future system should set this to true
+        computed_visibility.reset(visibility.is_visible);
+    }
+
+    unsafe {
+        s_has_done_visiblity = true;
+    }
+}
+
 
 fn ui(
     mut context: ResMut<EguiContext>,
@@ -122,7 +176,7 @@ fn setup(
     asset_server: Res<AssetServer>,
     texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    commands.spawn_bundle(Camera2dBundle::default())
+    commands.spawn(Camera2dBundle::default())
         .insert(MainCamera);
 
 
@@ -238,6 +292,21 @@ fn keyboard_input_system(
 
 }
 
+fn test_transform(
+    time: Res<Time>,
+    keyboard_input: Res<Input<KeyCode>>,
+    query: Query<(&TextureAtlasSprite, &Transform, Changed<Transform>)>,
+) {
+    let mut v = 0.0;
+
+    for (atlas, transform, changed) in query.iter() {
+
+
+        v += transform.translation.x;
+
+
+    }
+}
 
 fn camera_movement(
     time: Res<Time>,
@@ -248,33 +317,44 @@ fn camera_movement(
         let mut direction = Vec3::ZERO;
         let scale = transform.scale.x;
 
+        let mut change = false;
+        
         if keyboard_input.pressed(KeyCode::A) {
             direction -= Vec3::new(1.0, 0.0, 0.0);
+            change = true;
         }
 
         if keyboard_input.pressed(KeyCode::D) {
             direction += Vec3::new(1.0, 0.0, 0.0);
+            change = true;
         }
 
         if keyboard_input.pressed(KeyCode::W) {
             direction += Vec3::new(0.0, 1.0, 0.0);
+            change = true;
         }
 
         if keyboard_input.pressed(KeyCode::S) {
             direction -= Vec3::new(0.0, 1.0, 0.0);
+            change = true;
         }
 
         if keyboard_input.pressed(KeyCode::Z) {
             let scale = scale + 0.1;
             transform.scale = Vec3::new(scale, scale, scale);
+            change = true;
         }
 
         if keyboard_input.pressed(KeyCode::X) && scale > 1.1 {
             let scale = scale - 0.1;
             transform.scale = Vec3::new(scale, scale, scale);
+            change = true;
         }
 
-        transform.translation += time.delta_seconds() * direction * 1000.;
+        if change {
+            transform.translation += time.delta_seconds() * direction * 1000.;
+        }
+
     }
 }
 

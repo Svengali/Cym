@@ -11,6 +11,8 @@ use bevy::{
     sprite::Sprite,
 };
 
+use crate::fixed::StaticSpriteSheetBundle;
+
 use rand::Rng;
 
 enum WorldTiles {
@@ -56,11 +58,12 @@ impl Map {
 
     let mut rng = rand::thread_rng();
 
+    let size = 128;
 
-    for y in 0..256 {
+    for y in 0..size {
         let world_y = (y as f32) * 32.0;
 
-        for x in 0..256 {
+        for x in 0..size {
 
             let which_land_type = rng.gen_range(0..5);
 
@@ -74,7 +77,7 @@ impl Map {
 
             let world_x = (x as f32) * 32.0;
 
-            let pos = Transform::from_translation(Vec3::new(world_x, world_y, 1.0));
+            let pos = GlobalTransform::from_translation(Vec3::new(world_x, world_y, 1.0));
 
             let sprite = TextureAtlasSprite::new( index );
 
@@ -83,11 +86,12 @@ impl Map {
             // */
 
             //*
+
             commands
-                .spawn(SpriteSheetBundle {
+                .spawn(StaticSpriteSheetBundle {
                     sprite: sprite,
                     texture_atlas: texture_atlas_handle.clone(),
-                    transform: pos,
+                    global_transform: pos,
                     ..default()
                 });
             // */

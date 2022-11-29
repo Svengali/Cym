@@ -7,3 +7,6 @@
 [submodule "libs/rust-crdt"]
 	path = libs/rust-crdt
 	url = git@github.com:Svengali/rust-crdt.git
+[submodule "libs/bevy_polyline"]
+	path = libs/bevy_polyline
+	url = https://github.com/Svengali/bevy_polyline.git

@@ -10,3 +10,6 @@
 [submodule "libs/bevy_polyline"]
 	path = libs/bevy_polyline
 	url = https://github.com/Svengali/bevy_polyline.git
+[submodule "libs/bevy_hanabi"]
+	path = libs/bevy_hanabi
+	url = https://github.com/Svengali/bevy_hanabi.git

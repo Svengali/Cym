@@ -2,6 +2,7 @@
 
 trace-*.json
 /*.zip
+*.ignore*
 
 /target
 crates/*/target

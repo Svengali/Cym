@@ -24,6 +24,8 @@ use bevy_sprite::SpriteSystem;
 use tile::tile::TileBundle;
 use tile::map::Map;
 
+mod creature;
+
 /*
 pub mod prelude {
     #[doc(hidden)]

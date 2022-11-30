@@ -2,18 +2,13 @@
 //! Renders an animated sprite by loading all animation frames from a single image (a sprite sheet)
 //! into a texture atlas, and changing the displayed image periodically.
 
+use bevy::app::AppExit;
 use bevy::input::mouse::{MouseButtonInput, MouseWheel, MouseScrollUnit, MouseMotion};
 use bevy::render::{RenderStage, RenderApp};
 //use bevy::log::LogSettings;
-use bevy::render::camera::RenderTarget;
-use bevy::tasks::{ComputeTaskPool, TaskPool};
 use bevy::{
     prelude::*, 
-    //render::texture::ImageSettings,
-    render::texture::ImageFormat,
-    app::AppExit,
 };
-use bevy_egui::egui::Align2;
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 
 
@@ -21,7 +16,6 @@ mod fixed;
 
 mod tile;
 use bevy_sprite::SpriteSystem;
-use tile::tile::TileBundle;
 use tile::map::Map;
 
 mod creature;
@@ -35,6 +29,7 @@ pub mod prelude {
 }
 */
 
+/*
 // Enum that will be used as a global state for the game
 #[derive(Clone, Eq, PartialEq, Debug, Hash)]
 enum GameState {
@@ -43,15 +38,11 @@ enum GameState {
     Menu,
     Game,
 }
-
+*/
 
 fn main() {
     let mut app = App::new();
  
-    let tile_test = TileBundle {
-        ..Default::default()
-    };
-
     //ComputeTaskPool::init(TaskPool::default);
 
 
@@ -66,7 +57,7 @@ fn main() {
     app.add_system(mouse_move_event);
     app.add_system(scroll_events);
     app.add_system(once_visibility_propagate);
-    app.add_system(test_transform);
+    //app.add_system(test_transform);
     //app.add_system(my_cursor_system);
 
     app.add_system(ui);
@@ -92,6 +83,7 @@ fn main() {
     app.run();
 }
 
+/*
 #[derive(Component, Deref, DerefMut)]
 struct AnimationTimer(Timer);
 
@@ -104,7 +96,6 @@ fn animate_sprite(
         &Handle<TextureAtlas>,
     )>,
 ) {
-    //*
     for (mut timer, mut sprite, texture_atlas_handle) in &mut query {
         timer.tick(time.delta());
         if timer.just_finished() {
@@ -112,24 +103,10 @@ fn animate_sprite(
             sprite.index = (sprite.index + 1) % texture_atlas.textures.len();
         }
     }
-    //*/
 }
+*/
 
-
-fn draw_tilemap(
-    time: Res<Time>,
-    texture_atlases: Res<Assets<TextureAtlas>>,
-    //*
-    query: Query<(
-        &Sprite,
-        &Transform
-    )>
-    //*/
-) {
-
-}
-
-static mut s_has_done_visiblity: bool = false;
+static mut S_HAS_DONE_VISIBLITY: bool = false;
 
 fn once_visibility_propagate(
     mut root_query: Query<
@@ -141,21 +118,21 @@ fn once_visibility_propagate(
         ),
         Without<Parent>,
     >,
-    mut visibility_query: Query<(&Visibility, &mut ComputedVisibility, &Parent)>,
-    children_query: Query<&Children, (With<Parent>, With<Visibility>, With<ComputedVisibility>)>,
+    _visibility_query: Query<(&Visibility, &mut ComputedVisibility, &Parent)>,
+    _children_query: Query<&Children, (With<Parent>, With<Visibility>, With<ComputedVisibility>)>,
 ) {
 
     unsafe {
-        if s_has_done_visiblity { return };
+        if S_HAS_DONE_VISIBLITY { return };
     }
 
-    for (children, visibility, mut computed_visibility, entity) in root_query.iter_mut() {
+    for (_children, visibility, mut computed_visibility, _entity) in root_query.iter_mut() {
         // reset "view" visibility here ... if this entity should be drawn a future system should set this to true
         computed_visibility.reset(visibility.is_visible);
     }
 
     unsafe {
-        s_has_done_visiblity = true;
+        S_HAS_DONE_VISIBLITY = true;
     }
 }
 
@@ -198,7 +175,7 @@ fn setup(
     // */
 
     //*
-    let map = Map::new(
+    Map::new(
         commands,
         asset_server,
         texture_atlases,
@@ -249,7 +226,7 @@ fn my_cursor_system(
 }
 */
 
-
+/*
 fn fun_name(screen_pos: Vec2, window_size: Vec2, camera_transform: &GlobalTransform, camera: &Camera) -> Vec2 {
     // convert screen position [0..resolution] to ndc [-1..1] (gpu coordinates)
     let ndc = (screen_pos / window_size) * 2.0 - Vec2::ONE;
@@ -262,16 +239,12 @@ fn fun_name(screen_pos: Vec2, window_size: Vec2, camera_transform: &GlobalTransf
 
     world_pos
 }
+*/
 
 
 fn keyboard_input_system(
     keyboard_input: Res<Input<KeyCode>>, 
     mut exit: EventWriter<AppExit>,
-    query: Query<(
-    &mut AnimationTimer,
-    &mut TextureAtlasSprite,
-    &Handle<TextureAtlas>,
-    )>,
 
 ) {
 
@@ -294,14 +267,15 @@ fn keyboard_input_system(
 
 }
 
+/*
 fn test_transform(
-    time: Res<Time>,
-    keyboard_input: Res<Input<KeyCode>>,
+    _time: Res<Time>,
+    _keyboard_input: Res<Input<KeyCode>>,
     query: Query<(&TextureAtlasSprite, &Transform, Changed<Transform>)>,
 ) {
     let mut v = 0.0;
 
-    for (atlas, transform, changed) in query.iter() {
+    for (_atlas, transform, _changed) in query.iter() {
 
 
         v += transform.translation.x;
@@ -309,6 +283,7 @@ fn test_transform(
 
     }
 }
+*/
 
 fn camera_movement(
     time: Res<Time>,
@@ -363,7 +338,7 @@ fn camera_movement(
 fn mouse_move_event( 
     mut mouse: EventReader<MouseMotion>,
 ) {
-    for ev in mouse.iter() {
+    for _ev in mouse.iter() {
         //eprintln!("Mouse Delta: {}/{}", ev.delta.x, ev.delta.y);
     }
 }
@@ -396,7 +371,8 @@ fn scroll_events(
 
     for (_, mut transform) in query.iter_mut() {
         for ev in scroll_evr.iter() {
-            let mut scroll = 0.0;
+            let scroll;
+
             match ev.unit {
                 MouseScrollUnit::Line => {
                     //println!("Scroll (line units): vertical: {}, horizontal: {}", ev.y, ev.x);

@@ -2,13 +2,7 @@
 
 
 use bevy::{
-    prelude::{
-        default, Bundle, Component, ComputedVisibility, Entity, GlobalTransform, Handle, Image,
-        Transform, Visibility, Commands, SpriteSheetBundle, Res, AssetServer, ResMut, Assets,
-        TextureAtlas, Vec2, Vec3, TextureAtlasSprite
-    },
-    render::texture::DEFAULT_IMAGE_HANDLE,
-    sprite::Sprite,
+    prelude::{*},
 };
 
 use crate::fixed::StaticSpriteSheetBundle;
@@ -19,16 +13,16 @@ enum WorldTiles {
     Invalid = 304,
 
     LightDirtCenter = 112,
-    LightDirtSpecial= 175,
+    //LightDirtSpecial= 175,
 
     DarkDirtCenter = 115,
-    DarkDirtSpecial= 178,
+    //DarkDirtSpecial= 178,
 
     GrassCenter = 118,
-    GrassSpecial=181,
+    //GrassSpecial=181,
 
     WaterCenter = 394,
-    WaterSpecial= 454,
+    //WaterSpecial= 454,
 
 
 

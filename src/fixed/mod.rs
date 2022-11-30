@@ -62,7 +62,7 @@ pub fn extract_sprites(
 
     //extracted_sprites.sprites.clear();
 
-    for( cam, cam_transform, frustum ) in cam.iter() {
+    for( _cam, _cam_transform, frustum ) in cam.iter() {
         
 
         for (entity, sprite, transform, handle) in sprite_query.iter() {

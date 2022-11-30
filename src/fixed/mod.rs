@@ -81,7 +81,7 @@ pub fn extract_sprites(
             });
         }
 
-        atlas_query.par_for_each(4096, |(
+        atlas_query.par_for_each(65536, |(
             entity, 
             atlas_sprite, 
             transform, 

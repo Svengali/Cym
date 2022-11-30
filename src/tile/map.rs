@@ -58,7 +58,7 @@ impl Map {
 
     let mut rng = rand::thread_rng();
 
-    let size = 128;
+    let size = 4096;
 
     for y in 0..size {
         let world_y = (y as f32) * 32.0;

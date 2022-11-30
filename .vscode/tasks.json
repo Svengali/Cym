@@ -8,7 +8,7 @@
 				"$rustc"
 			],
 			"group": "build",
-			"label": "cargo build"
+			"label": "build debug"
 		},
 		{
 			"type": "shell",
@@ -17,7 +17,7 @@
 				"$rustc"
 			],
 			"group": "build",
-			"label": "cargo build release"
+			"label": "build release"
 		}
 	]
 }

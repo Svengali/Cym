@@ -39,6 +39,7 @@ impl Map {
         asset_server: Res<AssetServer>,
         mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) -> Map {
+
     let texture_handle = asset_server.load("textures/world/base_out_atlas.png");
     let texture_atlas = TextureAtlas::from_grid(
         texture_handle, 
@@ -52,7 +53,7 @@ impl Map {
 
     let mut rng = rand::thread_rng();
 
-    let size = 4096;
+    let size = 512;
 
     for y in 0..size {
         let world_y = (y as f32) * 32.0;
@@ -97,6 +98,8 @@ impl Map {
         ..Default::default()
     }
     }
+
+    
 }
 
 
